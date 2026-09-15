@@ -1,0 +1,7 @@
+import Link from 'next/link';
+import { PublicFooter } from '@/components/public/PublicFooter';
+import { PublicNavbar } from '@/components/public/PublicNavbar';
+
+export default function AboutPage() {
+  return <main className="min-h-screen bg-slate-950 text-slate-100"><PublicNavbar /><section className="mx-auto max-w-3xl px-4 py-20 sm:px-6"><p className="text-sm font-semibold uppercase tracking-widest text-emerald-300">About Dayton Rich</p><h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">A considered home for exceptional independent talent.</h1><p className="mt-6 text-lg leading-8 text-slate-300">Dayton Rich connects artists, presenters, and audiences through clear, current artist profiles. Every published listing is designed to make discovery, booking enquiries, and sharing work straightforward.</p><div className="mt-10 grid gap-5 sm:grid-cols-2"><article className="rounded-xl border border-slate-800 bg-slate-900 p-6"><h2 className="font-bold">For artists</h2><p className="mt-2 text-sm leading-6 text-slate-300">A professional profile for your work, media, and key links.</p></article><article className="rounded-xl border border-slate-800 bg-slate-900 p-6"><h2 className="font-bold">For bookers</h2><p className="mt-2 text-sm leading-6 text-slate-300">A focused directory to find the right talent quickly.</p></article></div><Link href="/" className="mt-10 inline-flex rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-emerald-500">Explore artists</Link></section><PublicFooter /></main>;
+}

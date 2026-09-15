@@ -1,0 +1,309 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  EXTERNAL_LINK
+}
+
+enum MetricType {
+  VIEW
+  CONTACT_CLICK
+  MEDIA_INTERACTION
+  SEARCH_APPEARANCE
+}
+
+model AdminUser {
+  id             String      @id @default(cuid())
+  email          String      @unique
+  username       String?     @unique
+  passwordHash   String
+  name           String
+  role           Role        @default(ADMIN)
+  failedAttempts Int         @default(0)
+  lockedUntil    DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  sessions       Session[]
+  auditLogs      AuditLog[]
+
+  @@index([email])
+  @@index([username])
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Artist {
+  id             String             @id @default(cuid())
+  name           String
+  fullName       String?
+  slug           String             @unique
+  tagline        String?
+  bio            String?            @db.Text
+  location       String?
+  status         String             @default("DRAFT") // PUBLISHED, DRAFT, TRASH
+  isFeatured     Boolean            @default(false)
+  isTrending     Boolean            @default(false)
+  profileViews   Int                @default(0)
+  isDeleted      Boolean            @default(false)
+  
+  // Custom Contact Fields
+  customWhatsapp String?
+  customEmail    String?
+  customWebsite  String?
+
+  // Relations
+  categories     ArtistCategory[]
+  tags           ArtistTag[]
+  media          ArtistMedia[]
+  externalLinks  ExternalLink[]
+  socialLinks    ArtistSocialLink[]
+  bookingContact BookingContact?
+  metrics        ArtistMetric[]
+
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  deletedAt      DateTime?
+
+  @@index([slug])
+  @@index([status, isDeleted])
+  @@index([isFeatured])
+  @@index([isTrending])
+  @@index([location])
+  @@index([profileViews])
+  @@index([createdAt])
+}
+
+model Category {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  slug        String           @unique
+  description String?
+  artists     ArtistCategory[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([slug])
+}
+
+model Tag {
+  id        String      @id @default(cuid())
+  name      String      @unique
+  slug      String      @unique
+  artists   ArtistTag[]
+  createdAt DateTime    @default(now())
+
+  @@index([slug])
+}
+
+model ArtistCategory {
+  artistId   String
+  categoryId String
+  artist     Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([artistId, categoryId])
+}
+
+model ArtistTag {
+  artistId String
+  tagId    String
+  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  tag      Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([artistId, tagId])
+}
+
+model ArtistMedia {
+  id           String    @id @default(cuid())
+  artistId     String
+  artist       Artist    @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  type         MediaType
+  url          String    @db.Text
+  thumbnailUrl String?   @db.Text
+  title        String?
+  description  String?
+  provider     String?   // e.g., "YouTube", "Spotify", "SoundCloud", "Custom"
+  mimeType     String?
+  sizeBytes    Int?
+  isPrimary    Boolean   @default(false)
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([artistId])
+  @@index([type])
+}
+
+model ExternalLink {
+  id        String   @id @default(cuid())
+  artistId  String
+  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  title     String
+  url       String
+  category  String?  @default("General")
+  createdAt DateTime @default(now())
+
+  @@index([artistId])
+}
+
+model ArtistSocialLink {
+  id        String   @id @default(cuid())
+  artistId  String
+  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  platform  String   // e.g., "instagram", "spotify", "youtube", "tiktok", "twitter"
+  url       String
+  createdAt DateTime @default(now())
+
+  @@index([artistId])
+}
+
+model BookingContact {
+  id            String   @id @default(cuid())
+  artistId      String   @unique
+  artist        Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  useDefault    Boolean  @default(true)
+  customEmail   String?
+  customPhone   String?  // WhatsApp formatted phone
+  customWebsite String?
+  customText    String?
+  updatedAt     DateTime @updatedAt
+}
+
+model HomepageContent {
+  id              String   @id @default(cuid())
+  heroTitle       String   @default("Discover World-Class Public Artists")
+  heroSubtitle    String   @default("The definitive showcase for visionary public entertainment and art talent.")
+  heroBannerUrl   String?
+  featuredHeading String   @default("Featured Artists")
+  trendingHeading String   @default("Trending Now")
+  updatedAt       DateTime @updatedAt
+}
+
+model Banner {
+  id             String   @id @default(cuid())
+  title          String
+  subtitle       String?
+  description    String?
+  imageUrl       String?
+  linkUrl        String?
+  ctaText        String?
+  ctaDestination String?
+  isActive       Boolean  @default(true)
+  isPublished    Boolean  @default(false)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+}
+
+model SiteSettings {
+  id                    String   @id @default("default-site-settings")
+  heroTitle             String   @default("Discover Exceptional Independent Talent")
+  heroDescription       String   @default("Explore verified artists, creatives, and performers across global stages.")
+  heroImage             String?
+  ctaText               String   @default("Explore Artists")
+  ctaDestination        String   @default("/artists")
+  introHeading          String   @default("Curated Excellence")
+  introBody             String   @default("Connecting promoters, venues, and fans directly with verified talent.")
+  defaultWhatsapp       String?
+  defaultEmail          String   @default("contact@daytonrich.com")
+  defaultWebsite        String?
+  socialInstagram       String?
+  socialTwitter         String?
+  socialYoutube         String?
+  socialSoundcloud      String?
+  showPromotionalBanner Boolean  @default(true)
+  updatedAt             DateTime @updatedAt
+}
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+model ArtistMetric {
+  id        String     @id @default(cuid())
+  artistId  String
+  artist    Artist     @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  eventType MetricType
+  weight    Float      @default(1.0)
+  ipHash    String?    // Anonymized/hashed IP to prevent rapid refresh abuse
+  userAgent String?
+  timestamp DateTime   @default(now())
+
+  @@index([artistId, timestamp])
+  @@index([eventType, timestamp])
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  ipAddress String
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([ipAddress, createdAt])
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  eventType String   // e.g., "PAGE_VIEW", "ARTIST_VIEW", "SEARCH", "CONTACT_CLICK"
+  entityId  String?  // artistId or categoryId
+  metadata  String?  @db.Text // JSON string
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String    @id @default(cuid())
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  action    String
+  details   String?   @db.Text
+  ipAddress String?
+  createdAt DateTime  @default(now())
+
+  @@index([adminId])
+  @@index([createdAt])
+}
+
+model NotificationSetting {
+  id          String   @id @default(cuid())
+  enabled     Boolean  @default(true)
+  adminEmail  String?
+  smtpHost    String?
+  smtpPort    Int?
+  smtpUser    String?
+  smtpPass    String?
+  updatedAt   DateTime @updatedAt
+}
