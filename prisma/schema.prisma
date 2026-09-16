@@ -38,6 +38,7 @@ model AdminUser {
   lockedUntil    DateTime?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
+
   sessions       Session[]
   auditLogs      AuditLog[]
 
@@ -57,25 +58,22 @@ model Session {
 }
 
 model investment {
-  id             String             @id @default(cuid())
+  id             String                  @id @default(cuid())
   name           String
   fullName       String?
-  slug           String             @unique
+  slug           String                  @unique
   tagline        String?
-  bio            String?            @db.Text
+  bio            String?                 @db.Text
   location       String?
-  status         String             @default("DRAFT") // PUBLISHED, DRAFT, TRASH
-  isFeatured     Boolean            @default(false)
-  isTrending     Boolean            @default(false)
-  profileViews   Int                @default(0)
-  isDeleted      Boolean            @default(false)
-  
-  // Custom Contact Fields
+  status         String                  @default("DRAFT")
+  isFeatured     Boolean                 @default(false)
+  isTrending     Boolean                 @default(false)
+  profileViews   Int                     @default(0)
+  isDeleted      Boolean                 @default(false)
   customWhatsapp String?
   customEmail    String?
   customWebsite  String?
 
-  // Relations
   categories     investmentCategory[]
   tags           investmentTag[]
   media          investmentMedia[]
@@ -84,8 +82,8 @@ model investment {
   bookingContact BookingContact?
   metrics        investmentMetric[]
 
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
   deletedAt      DateTime?
 
   @@index([slug])
@@ -98,108 +96,114 @@ model investment {
 }
 
 model Category {
-  id          String           @id @default(cuid())
-  name        String           @unique
-  slug        String           @unique
+  id          String               @id @default(cuid())
+  name        String               @unique
+  slug        String               @unique
   description String?
-  investments     investmentCategory[]
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  investments investmentCategory[]
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
 
   @@index([slug])
 }
 
 model Tag {
-  id        String      @id @default(cuid())
-  name      String      @unique
-  slug      String      @unique
-  investments   investmentTag[]
-  createdAt DateTime    @default(now())
+  id          String         @id @default(cuid())
+  name        String         @unique
+  slug        String         @unique
+  investments investmentTag[]
+  createdAt   DateTime       @default(now())
 
   @@index([slug])
 }
 
 model investmentCategory {
-  investmentId   String
-  categoryId String
-  investment     investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  investmentId String
+  categoryId   String
+
+  investment investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@id([investmentId, categoryId])
+  @@index([categoryId])
 }
 
 model investmentTag {
   investmentId String
-  tagId    String
-  investment   investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
-  tag      Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId        String
+
+  investment investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  tag         Tag        @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([investmentId, tagId])
+  @@index([tagId])
 }
 
 model investmentMedia {
-  id           String    @id @default(cuid())
-  investmentId     String
-  investment       investment    @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  investmentId String
+  investment   investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   type         MediaType
-  url          String    @db.Text
-  thumbnailUrl String?   @db.Text
+  url          String     @db.Text
+  thumbnailUrl String?    @db.Text
   title        String?
   description  String?
-  provider     String?   // e.g., "YouTube", "Spotify", "SoundCloud", "Custom"
+  provider     String?
   mimeType     String?
   sizeBytes    Int?
-  isPrimary    Boolean   @default(false)
-  sortOrder    Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  isPrimary    Boolean    @default(false)
+  sortOrder    Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
   @@index([investmentId])
   @@index([type])
+  @@index([investmentId, isPrimary])
+  @@index([investmentId, sortOrder])
 }
 
 model ExternalLink {
-  id        String   @id @default(cuid())
-  investmentId  String
-  investment    investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
-  title     String
-  url       String
-  category  String?  @default("General")
-  createdAt DateTime @default(now())
+  id           String     @id @default(cuid())
+  investmentId String
+  investment   investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  title        String
+  url          String     @db.Text
+  category     String?    @default("General")
+  createdAt    DateTime   @default(now())
 
   @@index([investmentId])
 }
 
 model investmentsocialLink {
-  id        String   @id @default(cuid())
-  investmentId  String
-  investment    investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
-  platform  String   // e.g., "instagram", "spotify", "youtube", "tiktok", "twitter"
-  url       String
-  createdAt DateTime @default(now())
+  id           String     @id @default(cuid())
+  investmentId String
+  investment   investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  platform     String
+  url          String     @db.Text
+  createdAt    DateTime   @default(now())
 
   @@index([investmentId])
 }
 
 model BookingContact {
-  id            String   @id @default(cuid())
-  investmentId      String   @unique
-  investment        investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
-  useDefault    Boolean  @default(true)
+  id            String     @id @default(cuid())
+  investmentId  String     @unique
+  investment    investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  useDefault    Boolean    @default(true)
   customEmail   String?
-  customPhone   String?  // WhatsApp formatted phone
+  customPhone   String?
   customWebsite String?
   customText    String?
-  updatedAt     DateTime @updatedAt
+  updatedAt     DateTime   @updatedAt
 }
 
 model HomepageContent {
   id              String   @id @default(cuid())
-  heroTitle       String   @default("Discover World-Class Public investments")
-  heroSubtitle    String   @default("The definitive showcase for visionary public entertainment and art wealth.")
+  heroTitle       String   @default("Discover Exceptional Investment Opportunities")
+  heroSubtitle    String   @default("Explore carefully presented investment opportunities across diverse sectors.")
   heroBannerUrl   String?
-  featuredHeading String   @default("Featured investments")
-  trendingHeading String   @default("Trending Now")
+  featuredHeading String   @default("Featured Investments")
+  trendingHeading String   @default("Trending Investments")
   updatedAt       DateTime @updatedAt
 }
 
@@ -223,20 +227,20 @@ model Banner {
 
 model SiteSettings {
   id                    String   @id @default("default-site-settings")
-  heroTitle             String   @default("Discover Exceptional Independent wealth")
-  heroDescription       String   @default("Explore verified investments.")
+  heroTitle             String   @default("Discover Exceptional Investment Opportunities")
+  heroDescription       String   @default("Explore verified investment opportunities and projects.")
   heroImage             String?
-  ctaText               String   @default("Explore investments")
-  ctaDestination        String   @default("/investments")
-  introHeading          String   @default("Curated Excellence")
-  introBody             String   @default("Connecting promoters, upcoming projects, and investors directly with verified wealth.")
+  ctaText               String   @default("Explore Investments")
+  ctaDestination        String   @default("/investment")
+  introHeading          String   @default("Curated Investment Opportunities")
+  introBody             String   @default("Discover investment opportunities, projects, and businesses presented through a professional digital platform.")
   defaultWhatsapp       String?
-  defaultEmail          String   @default("contact@ndegwainvestments.com")
+  defaultEmail          String?
   defaultWebsite        String?
   socialInstagram       String?
   socialTwitter         String?
   socialYoutube         String?
-  socialSoundcloud      String?
+  socialLinkedin        String?
   showPromotionalBanner Boolean  @default(true)
   updatedAt             DateTime @updatedAt
 }
@@ -249,14 +253,14 @@ model SystemSetting {
 }
 
 model investmentMetric {
-  id        String     @id @default(cuid())
-  investmentId  String
-  investment    investment     @relation(fields: [investmentId], references: [id], onDelete: Cascade)
-  eventType MetricType
-  weight    Float      @default(1.0)
-  ipHash    String?    // Anonymized/hashed IP to prevent rapid refresh abuse
-  userAgent String?
-  timestamp DateTime   @default(now())
+  id           String      @id @default(cuid())
+  investmentId String
+  investment   investment  @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  eventType    MetricType
+  weight       Float       @default(1.0)
+  ipHash       String?
+  userAgent    String?
+  timestamp    DateTime    @default(now())
 
   @@index([investmentId, timestamp])
   @@index([eventType, timestamp])
@@ -273,15 +277,16 @@ model LoginAttempt {
 
 model AnalyticsEvent {
   id        String   @id @default(cuid())
-  eventType String   // e.g., "PAGE_VIEW", "investment_VIEW", "SEARCH", "CONTACT_CLICK"
-  entityId  String?  // investmentId or categoryId
-  metadata  String?  @db.Text // JSON string
+  eventType String
+  entityId  String?
+  metadata  String?  @db.Text
   ipAddress String?
   userAgent String?
   createdAt DateTime @default(now())
 
   @@index([eventType])
   @@index([createdAt])
+  @@index([entityId])
 }
 
 model AuditLog {
@@ -298,12 +303,12 @@ model AuditLog {
 }
 
 model NotificationSetting {
-  id          String   @id @default(cuid())
-  enabled     Boolean  @default(true)
-  adminEmail  String?
-  smtpHost    String?
-  smtpPort    Int?
-  smtpUser    String?
-  smtpPass    String?
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(cuid())
+  enabled    Boolean  @default(true)
+  adminEmail String?
+  smtpHost   String?
+  smtpPort   Int?
+  smtpUser   String?
+  smtpPass   String?
+  updatedAt  DateTime @updatedAt
 }
