@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 import { db } from "@/lib/db";
 
 interface ContactNotificationPayload {
-  artistName: string;
-  artistSlug: string;
+  investmentName: string;
+  investmentslug: string;
   visitorName?: string;
   visitorEmail?: string;
   contactType: string;
@@ -29,21 +29,21 @@ export async function sendAdminContactNotification(payload: ContactNotificationP
     });
 
     const mailOptions = {
-      from: `"Dayton Rich System" <no-reply@daytonrich.com>`,
+      from: `"ndegwa investments  System" <no-reply@daytonrich.com>`,
       to: settings.adminEmail,
-      subject: `[Lead / Contact] New inquiry for artist: ${payload.artistName}`,
-      text: `Hello Admin,\n\nA visitor has interacted with ${payload.artistName} via ${payload.contactType}.\n\nVisitor Name: ${payload.visitorName || "Not Provided"}\nVisitor Email: ${payload.visitorEmail || "Not Provided"}\nMessage: ${payload.message || "None"}\n\nView Artist Profile: https://daytonrich.com/artists/${payload.artistSlug}`,
+      subject: `[Lead / Contact] New inquiry for investment: ${payload.investmentName}`,
+      text: `Hello Admin,\n\nA visitor has interacted with ${payload.investmentName} via ${payload.contactType}.\n\nVisitor Name: ${payload.visitorName || "Not Provided"}\nVisitor Email: ${payload.visitorEmail || "Not Provided"}\nMessage: ${payload.message || "None"}\n\nView investment Profile: https://daytonrich.com/investments/${payload.investmentslug}`,
       html: `
         <div style="font-family: sans-serif; padding: 20px; background: #111; color: #eee; border-radius: 8px;">
-          <h2 style="color: #10b981;">New Artist Contact Inquiry</h2>
-          <p><strong>Artist:</strong> ${payload.artistName}</p>
+          <h2 style="color: #10b981;">New investment Contact Inquiry</h2>
+          <p><strong>investment:</strong> ${payload.investmentName}</p>
           <p><strong>Interaction Type:</strong> ${payload.contactType}</p>
           <hr style="border-color: #333;" />
           <p><strong>Visitor Name:</strong> ${payload.visitorName || "Not Provided"}</p>
           <p><strong>Visitor Email:</strong> ${payload.visitorEmail || "Not Provided"}</p>
           <p><strong>Message:</strong> ${payload.message || "None provided"}</p>
           <br/>
-          <a href="https://daytonrich.com/artists/${payload.artistSlug}" style="background: #10b981; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">View Profile</a>
+          <a href="https://daytonrich.com/investments/${payload.investmentslug}" style="background: #10b981; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">View Profile</a>
         </div>
       `,
     };

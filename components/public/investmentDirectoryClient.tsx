@@ -1,11 +1,11 @@
-// components/public/ArtistDirectoryClient.tsx
+// components/public/investmentDirectoryClient.tsx
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Filter, X, TrendingUp, MapPin, SlidersHorizontal, ChevronRight, ChevronLeft } from "lucide-react";
 
-interface Artist {
+interface investment {
   id: string;
   name: string;
   fullName: string | null;
@@ -19,21 +19,21 @@ interface Artist {
 }
 
 interface Props {
-  initialArtists: Artist[];
+  initialinvestments: investment[];
   categories: { id: string; name: string; slug: string }[];
   tags: { id: string; name: string; slug: string }[];
   locations: string[];
-  trendingArtists: Artist[];
+  trendinginvestments: investment[];
   pagination: { page: number; totalPages: number; totalCount: number };
   initialFilters: { q: string; category?: string; tag?: string; location?: string; sort: string };
 }
 
-export default function ArtistDirectoryClient({
-  initialArtists,
+export default function investmentDirectoryClient({
+  initialinvestments,
   categories,
   tags,
   locations,
-  trendingArtists,
+  trendinginvestments,
   pagination,
   initialFilters,
 }: Props) {
@@ -65,7 +65,7 @@ export default function ArtistDirectoryClient({
     params.delete("page"); // Reset pagination on new filter combination
 
     startTransition(() => {
-      router.push(`/artists?${params.toString()}`);
+      router.push(`/investments?${params.toString()}`);
     });
   };
 
@@ -80,7 +80,7 @@ export default function ArtistDirectoryClient({
     setTag("");
     setLocation("");
     setSort("popular");
-    router.push("/artists");
+    router.push("/investments");
   };
 
   const hasActiveFilters = query || category || tag || location;
@@ -158,11 +158,11 @@ export default function ArtistDirectoryClient({
         {/* Automatic Trending Widget */}
         <div className="pt-4 border-t border-gray-800">
           <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> Trending Artists
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> Trending investments
           </h4>
           <div className="space-y-2.5">
-            {trendingArtists.slice(0, 3).map((item) => (
-              <a key={item.id} href={`/artists/${item.slug}`} className="flex items-center gap-3 group">
+            {trendinginvestments.slice(0, 3).map((item) => (
+              <a key={item.id} href={`/investments/${item.slug}`} className="flex items-center gap-3 group">
                 <div className="w-10 h-10 rounded-lg bg-gray-800 overflow-hidden shrink-0">
                   {item.media?.[0]?.url && <img src={item.media[0].url} alt={item.name} className="w-full h-full object-cover" />}
                 </div>
@@ -186,7 +186,7 @@ export default function ArtistDirectoryClient({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by stage name, full name, bio, location..."
+              placeholder="Search by investment name, full name, bio, location..."
               className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white text-sm focus:outline-none focus:border-emerald-500"
             />
           </form>
@@ -242,12 +242,12 @@ export default function ArtistDirectoryClient({
         )}
 
         {/* Empty State Handler */}
-        {initialArtists.length === 0 ? (
+        {initialinvestments.length === 0 ? (
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center space-y-4">
             <div className="w-12 h-12 bg-gray-800 text-gray-400 rounded-full flex items-center justify-center mx-auto">
               <Search className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white">No artists matched your search or filter combination</h3>
+            <h3 className="text-lg font-bold text-white">No investments matched your search or filter combination</h3>
             <p className="text-sm text-gray-400 max-w-md mx-auto">
               No profiles match your active search terms or filters. Try clearing your filters or exploring another category.
             </p>
@@ -260,33 +260,33 @@ export default function ArtistDirectoryClient({
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {initialArtists.map((artist) => (
-              <a key={artist.id} href={`/artists/${artist.slug}`} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition-all group flex flex-col">
+            {initialinvestments.map((investment) => (
+              <a key={investment.id} href={`/investments/${investment.slug}`} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition-all group flex flex-col">
                 <div className="aspect-square bg-gray-800 relative overflow-hidden">
-                  {artist.media?.[0]?.url ? (
-                    <img src={artist.media[0].url} alt={artist.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  {investment.media?.[0]?.url ? (
+                    <img src={investment.media[0].url} alt={investment.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm">No Image Available</div>
                   )}
-                  {artist.categories?.[0] && (
+                  {investment.categories?.[0] && (
                     <span className="absolute top-3 left-3 bg-gray-950/80 backdrop-blur text-emerald-400 border border-emerald-500/30 text-[10px] font-semibold px-2.5 py-1 rounded-full">
-                      {artist.categories[0].category.name}
+                      {investment.categories[0].category.name}
                     </span>
                   )}
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors text-base">{artist.name}</h3>
-                    {artist.location && (
+                    <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors text-base">{investment.name}</h3>
+                    {investment.location && (
                       <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-                        <MapPin className="w-3 h-3 text-emerald-400" /> {artist.location}
+                        <MapPin className="w-3 h-3 text-emerald-400" /> {investment.location}
                       </p>
                     )}
-                    {artist.bio && <p className="text-xs text-gray-400 mt-2 line-clamp-2">{artist.bio}</p>}
+                    {investment.bio && <p className="text-xs text-gray-400 mt-2 line-clamp-2">{investment.bio}</p>}
                   </div>
-                  {artist.tags && artist.tags.length > 0 && (
+                  {investment.tags && investment.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-4">
-                      {artist.tags.slice(0, 2).map((t) => (
+                      {investment.tags.slice(0, 2).map((t) => (
                         <span key={t.tag.id} className="text-[10px] bg-gray-800 text-gray-300 px-2 py-0.5 rounded">
                           #{t.tag.name}
                         </span>
@@ -311,7 +311,7 @@ export default function ArtistDirectoryClient({
                 onClick={() => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.set("page", String(pagination.page - 1));
-                  router.push(`/artists?${params.toString()}`);
+                  router.push(`/investments?${params.toString()}`);
                 }}
                 className="px-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-sm text-white disabled:opacity-40 hover:bg-gray-800 transition-colors flex items-center gap-1"
               >
@@ -322,7 +322,7 @@ export default function ArtistDirectoryClient({
                 onClick={() => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.set("page", String(pagination.page + 1));
-                  router.push(`/artists?${params.toString()}`);
+                  router.push(`/investments?${params.toString()}`);
                 }}
                 className="px-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-sm text-white disabled:opacity-40 hover:bg-gray-800 transition-colors flex items-center gap-1"
               >
@@ -340,7 +340,7 @@ export default function ArtistDirectoryClient({
             <div className="space-y-6">
               <div className="flex items-center justify-between border-b border-gray-800 pb-4">
                 <h3 className="font-bold text-white text-lg flex items-center gap-2">
-                  <Filter className="w-5 h-5 text-emerald-400" /> Filter Artists
+                  <Filter className="w-5 h-5 text-emerald-400" /> Filter investments
                 </h3>
                 <button onClick={() => setMobileFilterOpen(false)} className="text-gray-400 hover:text-white">
                   <X className="w-5 h-5" />

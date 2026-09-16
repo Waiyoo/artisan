@@ -1,13 +1,13 @@
 import { PublicNavbar } from '@/components/public/PublicNavbar';
 import { PublicFooter } from '@/components/public/PublicFooter';
-import ArtistDirectoryClient from '@/components/public/ArtistDirectoryClient';
+import InvestmentDirectoryClient from '@/components/public/investmentDirectoryClient';
 import { db } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
-  let initialArtists: any[] = [];
-  let trendingArtists: any[] = [];
+  let initialinvestments: any[] = [];
+  let trendinginvestments: any[] = [];
   let categories: any[] = [];
   let tags: any[] = [];
   let locations: string[] = [];
@@ -27,7 +27,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   const orderBy = sort === 'alphabetical' ? [{ name: 'asc' as const }] : sort === 'recent' ? [{ createdAt: 'desc' as const }] : [{ isFeatured: 'desc' as const }, { profileViews: 'desc' as const }, { name: 'asc' as const }];
 
   try {
-    initialArtists = await db.artist.findMany({
+    initialinvestments = await db.investment.findMany({
       where,
       include: {
         categories: { include: { category: true } },
@@ -39,7 +39,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
       orderBy,
     });
     
-    trendingArtists = await db.artist.findMany({
+    trendinginvestments = await db.investment.findMany({
       where: { isDeleted: false, status: 'PUBLISHED' },
       include: { media: { orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }], take: 1 } },
       take: 5,
@@ -47,11 +47,11 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     });
 
     [totalCount, categories, tags] = await Promise.all([
-      db.artist.count({ where }),
+      db.investment.count({ where }),
       db.category.findMany({ orderBy: { name: 'asc' }, select: { id: true, name: true, slug: true } }),
       db.tag.findMany({ orderBy: { name: 'asc' }, select: { id: true, name: true, slug: true } }),
     ]);
-    const locationRows = await db.artist.findMany({ where: { isDeleted: false, status: 'PUBLISHED', location: { not: null } }, distinct: ['location'], select: { location: true }, orderBy: { location: 'asc' } });
+    const locationRows = await db.investment.findMany({ where: { isDeleted: false, status: 'PUBLISHED', location: { not: null } }, distinct: ['location'], select: { location: true }, orderBy: { location: 'asc' } });
     locations = locationRows.flatMap((row) => row.location ? [row.location] : []);
   } catch (err) {
     console.error("Database fetch error:", err);
@@ -61,9 +61,9 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     <main className="min-h-screen bg-slate-950">
       <PublicNavbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <ArtistDirectoryClient 
-          initialArtists={initialArtists}
-          trendingArtists={trendingArtists}
+        <InvestmentDirectoryClient 
+          initialinvestments={initialinvestments}
+          trendinginvestments={trendinginvestments}
           categories={categories}
           tags={tags}
           locations={locations}

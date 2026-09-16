@@ -35,7 +35,7 @@ CREATE TABLE "Session" (
 );
 
 -- CreateTable
-CREATE TABLE "Artist" (
+CREATE TABLE "investment" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "fullName" TEXT,
@@ -55,7 +55,7 @@ CREATE TABLE "Artist" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
-    CONSTRAINT "Artist_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "investment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -81,25 +81,25 @@ CREATE TABLE "Tag" (
 );
 
 -- CreateTable
-CREATE TABLE "ArtistCategory" (
-    "artistId" TEXT NOT NULL,
+CREATE TABLE "investmentCategory" (
+    "investmentId" TEXT NOT NULL,
     "categoryId" TEXT NOT NULL,
 
-    CONSTRAINT "ArtistCategory_pkey" PRIMARY KEY ("artistId","categoryId")
+    CONSTRAINT "investmentCategory_pkey" PRIMARY KEY ("investmentId","categoryId")
 );
 
 -- CreateTable
-CREATE TABLE "ArtistTag" (
-    "artistId" TEXT NOT NULL,
+CREATE TABLE "investmentTag" (
+    "investmentId" TEXT NOT NULL,
     "tagId" TEXT NOT NULL,
 
-    CONSTRAINT "ArtistTag_pkey" PRIMARY KEY ("artistId","tagId")
+    CONSTRAINT "investmentTag_pkey" PRIMARY KEY ("investmentId","tagId")
 );
 
 -- CreateTable
-CREATE TABLE "ArtistMedia" (
+CREATE TABLE "investmentMedia" (
     "id" TEXT NOT NULL,
-    "artistId" TEXT NOT NULL,
+    "investmentId" TEXT NOT NULL,
     "type" "MediaType" NOT NULL,
     "url" TEXT NOT NULL,
     "thumbnailUrl" TEXT,
@@ -113,13 +113,13 @@ CREATE TABLE "ArtistMedia" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "ArtistMedia_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "investmentMedia_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "ExternalLink" (
     "id" TEXT NOT NULL,
-    "artistId" TEXT NOT NULL,
+    "investmentId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "category" TEXT DEFAULT 'General',
@@ -129,20 +129,20 @@ CREATE TABLE "ExternalLink" (
 );
 
 -- CreateTable
-CREATE TABLE "ArtistSocialLink" (
+CREATE TABLE "investmentsocialLink" (
     "id" TEXT NOT NULL,
-    "artistId" TEXT NOT NULL,
+    "investmentId" TEXT NOT NULL,
     "platform" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "ArtistSocialLink_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "investmentsocialLink_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "BookingContact" (
     "id" TEXT NOT NULL,
-    "artistId" TEXT NOT NULL,
+    "investmentId" TEXT NOT NULL,
     "useDefault" BOOLEAN NOT NULL DEFAULT true,
     "customEmail" TEXT,
     "customPhone" TEXT,
@@ -156,10 +156,10 @@ CREATE TABLE "BookingContact" (
 -- CreateTable
 CREATE TABLE "HomepageContent" (
     "id" TEXT NOT NULL,
-    "heroTitle" TEXT NOT NULL DEFAULT 'Discover World-Class Public Artists',
-    "heroSubtitle" TEXT NOT NULL DEFAULT 'The definitive showcase for visionary public entertainment and art talent.',
+    "heroTitle" TEXT NOT NULL DEFAULT 'Discover World-Class Public investments',
+    "heroSubtitle" TEXT NOT NULL DEFAULT 'The definitive showcase for visionary public entertainment and art wealth.',
     "heroBannerUrl" TEXT,
-    "featuredHeading" TEXT NOT NULL DEFAULT 'Featured Artists',
+    "featuredHeading" TEXT NOT NULL DEFAULT 'Featured investments',
     "trendingHeading" TEXT NOT NULL DEFAULT 'Trending Now',
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -188,13 +188,13 @@ CREATE TABLE "Banner" (
 -- CreateTable
 CREATE TABLE "SiteSettings" (
     "id" TEXT NOT NULL DEFAULT 'default-site-settings',
-    "heroTitle" TEXT NOT NULL DEFAULT 'Discover Exceptional Independent Talent',
-    "heroDescription" TEXT NOT NULL DEFAULT 'Explore verified artists, creatives, and performers across global stages.',
+    "heroTitle" TEXT NOT NULL DEFAULT 'Discover Exceptional Independent wealth',
+    "heroDescription" TEXT NOT NULL DEFAULT 'Explore verified investments, creatives, and performers across global stages.',
     "heroImage" TEXT,
-    "ctaText" TEXT NOT NULL DEFAULT 'Explore Artists',
-    "ctaDestination" TEXT NOT NULL DEFAULT '/artists',
+    "ctaText" TEXT NOT NULL DEFAULT 'Explore investments',
+    "ctaDestination" TEXT NOT NULL DEFAULT '/investments',
     "introHeading" TEXT NOT NULL DEFAULT 'Curated Excellence',
-    "introBody" TEXT NOT NULL DEFAULT 'Connecting promoters, venues, and fans directly with verified talent.',
+    "introBody" TEXT NOT NULL DEFAULT 'Connecting promoters, venues, and fans directly with verified wealth.',
     "defaultWhatsapp" TEXT,
     "defaultEmail" TEXT NOT NULL DEFAULT 'contact@daytonrich.com',
     "defaultWebsite" TEXT,
@@ -219,16 +219,16 @@ CREATE TABLE "SystemSetting" (
 );
 
 -- CreateTable
-CREATE TABLE "ArtistMetric" (
+CREATE TABLE "investmentMetric" (
     "id" TEXT NOT NULL,
-    "artistId" TEXT NOT NULL,
+    "investmentId" TEXT NOT NULL,
     "eventType" "MetricType" NOT NULL,
     "weight" DOUBLE PRECISION NOT NULL DEFAULT 1.0,
     "ipHash" TEXT,
     "userAgent" TEXT,
     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "ArtistMetric_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "investmentMetric_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -299,28 +299,28 @@ CREATE UNIQUE INDEX "Session_token_key" ON "Session"("token");
 CREATE INDEX "Session_userId_idx" ON "Session"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Artist_slug_key" ON "Artist"("slug");
+CREATE UNIQUE INDEX "investment_slug_key" ON "investment"("slug");
 
 -- CreateIndex
-CREATE INDEX "Artist_slug_idx" ON "Artist"("slug");
+CREATE INDEX "investment_slug_idx" ON "investment"("slug");
 
 -- CreateIndex
-CREATE INDEX "Artist_status_isDeleted_idx" ON "Artist"("status", "isDeleted");
+CREATE INDEX "investment_status_isDeleted_idx" ON "investment"("status", "isDeleted");
 
 -- CreateIndex
-CREATE INDEX "Artist_isFeatured_idx" ON "Artist"("isFeatured");
+CREATE INDEX "investment_isFeatured_idx" ON "investment"("isFeatured");
 
 -- CreateIndex
-CREATE INDEX "Artist_isTrending_idx" ON "Artist"("isTrending");
+CREATE INDEX "investment_isTrending_idx" ON "investment"("isTrending");
 
 -- CreateIndex
-CREATE INDEX "Artist_location_idx" ON "Artist"("location");
+CREATE INDEX "investment_location_idx" ON "investment"("location");
 
 -- CreateIndex
-CREATE INDEX "Artist_profileViews_idx" ON "Artist"("profileViews");
+CREATE INDEX "investment_profileViews_idx" ON "investment"("profileViews");
 
 -- CreateIndex
-CREATE INDEX "Artist_createdAt_idx" ON "Artist"("createdAt");
+CREATE INDEX "investment_createdAt_idx" ON "investment"("createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
@@ -341,19 +341,19 @@ CREATE UNIQUE INDEX "Tag_slug_key" ON "Tag"("slug");
 CREATE INDEX "Tag_slug_idx" ON "Tag"("slug");
 
 -- CreateIndex
-CREATE INDEX "ArtistMedia_artistId_idx" ON "ArtistMedia"("artistId");
+CREATE INDEX "investmentMedia_investmentId_idx" ON "investmentMedia"("investmentId");
 
 -- CreateIndex
-CREATE INDEX "ArtistMedia_type_idx" ON "ArtistMedia"("type");
+CREATE INDEX "investmentMedia_type_idx" ON "investmentMedia"("type");
 
 -- CreateIndex
-CREATE INDEX "ExternalLink_artistId_idx" ON "ExternalLink"("artistId");
+CREATE INDEX "ExternalLink_investmentId_idx" ON "ExternalLink"("investmentId");
 
 -- CreateIndex
-CREATE INDEX "ArtistSocialLink_artistId_idx" ON "ArtistSocialLink"("artistId");
+CREATE INDEX "investmentsocialLink_investmentId_idx" ON "investmentsocialLink"("investmentId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BookingContact_artistId_key" ON "BookingContact"("artistId");
+CREATE UNIQUE INDEX "BookingContact_investmentId_key" ON "BookingContact"("investmentId");
 
 -- CreateIndex
 CREATE INDEX "Banner_isPublished_sortOrder_idx" ON "Banner"("isPublished", "sortOrder");
@@ -362,10 +362,10 @@ CREATE INDEX "Banner_isPublished_sortOrder_idx" ON "Banner"("isPublished", "sort
 CREATE UNIQUE INDEX "SystemSetting_key_key" ON "SystemSetting"("key");
 
 -- CreateIndex
-CREATE INDEX "ArtistMetric_artistId_timestamp_idx" ON "ArtistMetric"("artistId", "timestamp");
+CREATE INDEX "investmentMetric_investmentId_timestamp_idx" ON "investmentMetric"("investmentId", "timestamp");
 
 -- CreateIndex
-CREATE INDEX "ArtistMetric_eventType_timestamp_idx" ON "ArtistMetric"("eventType", "timestamp");
+CREATE INDEX "investmentMetric_eventType_timestamp_idx" ON "investmentMetric"("eventType", "timestamp");
 
 -- CreateIndex
 CREATE INDEX "LoginAttempt_ipAddress_createdAt_idx" ON "LoginAttempt"("ipAddress", "createdAt");
@@ -386,31 +386,31 @@ CREATE INDEX "AuditLog_createdAt_idx" ON "AuditLog"("createdAt");
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AdminUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ArtistCategory" ADD CONSTRAINT "ArtistCategory_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "investmentCategory" ADD CONSTRAINT "investmentCategory_investmentId_fkey" FOREIGN KEY ("investmentId") REFERENCES "investment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ArtistCategory" ADD CONSTRAINT "ArtistCategory_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "investmentCategory" ADD CONSTRAINT "investmentCategory_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ArtistTag" ADD CONSTRAINT "ArtistTag_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "investmentTag" ADD CONSTRAINT "investmentTag_investmentId_fkey" FOREIGN KEY ("investmentId") REFERENCES "investment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ArtistTag" ADD CONSTRAINT "ArtistTag_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "investmentTag" ADD CONSTRAINT "investmentTag_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ArtistMedia" ADD CONSTRAINT "ArtistMedia_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "investmentMedia" ADD CONSTRAINT "investmentMedia_investmentId_fkey" FOREIGN KEY ("investmentId") REFERENCES "investment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ExternalLink" ADD CONSTRAINT "ExternalLink_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ExternalLink" ADD CONSTRAINT "ExternalLink_investmentId_fkey" FOREIGN KEY ("investmentId") REFERENCES "investment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ArtistSocialLink" ADD CONSTRAINT "ArtistSocialLink_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "investmentsocialLink" ADD CONSTRAINT "investmentsocialLink_investmentId_fkey" FOREIGN KEY ("investmentId") REFERENCES "investment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookingContact" ADD CONSTRAINT "BookingContact_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "BookingContact" ADD CONSTRAINT "BookingContact_investmentId_fkey" FOREIGN KEY ("investmentId") REFERENCES "investment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ArtistMetric" ADD CONSTRAINT "ArtistMetric_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "investmentMetric" ADD CONSTRAINT "investmentMetric_investmentId_fkey" FOREIGN KEY ("investmentId") REFERENCES "investment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "AuditLog" ADD CONSTRAINT "AuditLog_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "AdminUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;

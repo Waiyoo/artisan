@@ -1,4 +1,4 @@
-// components/public/ArtistMediaSection.tsx
+// components/public/investmentMediaSection.tsx
 import { ExternalLink, Download, Play } from "lucide-react";
 
 interface MediaItem {
@@ -9,7 +9,7 @@ interface MediaItem {
   provider: string | null;
 }
 
-export default function ArtistMediaSection({ media }: { media: MediaItem[] }) {
+export default function investmentMediaSection({ media }: { media: MediaItem[] }) {
   if (!media || media.length === 0) return null;
 
   const images = media.filter((m) => m.type === "IMAGE");
@@ -27,7 +27,7 @@ export default function ArtistMediaSection({ media }: { media: MediaItem[] }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {images.map((img) => (
               <div key={img.id} className="relative group overflow-hidden rounded-xl bg-gray-900 border border-gray-800 aspect-square">
-                <img src={img.url} alt={img.title || "Artist gallery image"} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <img src={img.url} alt={img.title || "investment gallery image"} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 {img.title && (
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                     <p className="text-xs font-medium text-white">{img.title}</p>

@@ -8,7 +8,7 @@ export function PublicNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           <span className="text-xl font-extrabold tracking-wider uppercase font-serif bg-gradient-to-r from-emerald-200 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
-            Dayton Rich
+            ndegwa investments 
           </span>
           <span className="text-[10px] tracking-widest uppercase bg-emerald-950 text-emerald-300 border border-emerald-800/50 px-2 py-0.5 rounded font-mono">
             Registry
@@ -17,7 +17,7 @@ export function PublicNavbar() {
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
           <Link href="/" className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
-            <Compass className="w-4 h-4 text-emerald-400" /> Discover Artists
+            <Compass className="w-4 h-4 text-emerald-400" /> Discover investments
           </Link>
           <Link href="/about" className="hover:text-amber-300 transition-colors">
             About
@@ -32,7 +32,7 @@ export function PublicNavbar() {
             href="/"
             className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium shadow-lg shadow-emerald-950/20 transition-all"
           >
-            <Sparkles className="w-4 h-4 text-emerald-100" /> Explore Talent
+            <Sparkles className="w-4 h-4 text-emerald-100" /> Explore wealth
           </Link>
           <Link
             href="/admin"

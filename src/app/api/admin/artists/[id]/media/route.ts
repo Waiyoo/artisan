@@ -23,11 +23,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
   } else {
     const file = form.get('file');
     if (!(file instanceof File) || file.size === 0) return NextResponse.json({ error: 'A file is required.' }, { status: 400 });
-    const uploaded = await uploadFileToStorage(file, `artists/${params.id}`);
+    const uploaded = await uploadFileToStorage(file, `investments/${params.id}`);
     url = uploaded.url; mimeType = uploaded.mimeType; sizeBytes = uploaded.sizeBytes;
   }
-  if (isPrimary) await db.artistMedia.updateMany({ where: { artistId: params.id }, data: { isPrimary: false } });
-  const media = await db.artistMedia.create({ data: { artistId: params.id, type: type as any, url, title, provider, mimeType, sizeBytes, isPrimary } });
+  if (isPrimary) await db.investmentMedia.updateMany({ where: { investmentId: params.id }, data: { isPrimary: false } });
+  const media = await db.investmentMedia.create({ data: { investmentId: params.id, type: type as any, url, title, provider, mimeType, sizeBytes, isPrimary } });
   return NextResponse.json({ media }, { status: 201 });
 }
 
@@ -35,9 +35,9 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   if (!await requireAdmin()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const mediaId = new URL(request.url).searchParams.get('mediaId');
   if (!mediaId) return NextResponse.json({ error: 'mediaId is required.' }, { status: 400 });
-  const media = await db.artistMedia.findFirst({ where: { id: mediaId, artistId: params.id } });
+  const media = await db.investmentMedia.findFirst({ where: { id: mediaId, investmentId: params.id } });
   if (!media) return NextResponse.json({ error: 'Media not found.' }, { status: 404 });
-  await db.artistMedia.delete({ where: { id: media.id } });
+  await db.investmentMedia.delete({ where: { id: media.id } });
   await deleteFileFromStorage(media.url);
   return new NextResponse(null, { status: 204 });
 }

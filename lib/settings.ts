@@ -2,13 +2,13 @@
 import { db } from "@/lib/db";
 
 const DEFAULT_SETTINGS = {
-  heroTitle: "Discover Exceptional Independent Talent",
-  heroDescription: "Explore verified artists, creatives, and performers across global stages.",
+  heroTitle: "Discover Exceptional Independent wealth",
+  heroDescription: "Explore verified investments, creatives, and performers across global stages.",
   heroImage: "",
-  ctaText: "Explore Artists",
-  ctaDestination: "/artists",
+  ctaText: "Explore investments",
+  ctaDestination: "/investments",
   introHeading: "Curated Excellence",
-  introBody: "Connecting promoters, venues, and fans directly with verified talent.",
+  introBody: "Connecting promoters, venues, and fans directly with verified wealth.",
   defaultWhatsapp: "",
   defaultEmail: "contact@daytonrich.com",
   defaultWebsite: "",

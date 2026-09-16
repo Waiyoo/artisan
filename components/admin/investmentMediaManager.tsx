@@ -1,4 +1,4 @@
-// components/admin/ArtistMediaManager.tsx
+// components/admin/investmentMediaManager.tsx
 "use client";
 
 import { useState } from "react";
@@ -14,7 +14,7 @@ interface MediaItem {
   sortOrder: number;
 }
 
-export default function ArtistMediaManager({ artistId, initialMedia }: { artistId: string; initialMedia: MediaItem[] }) {
+export default function investmentMediaManager({ investmentId, initialMedia }: { investmentId: string; initialMedia: MediaItem[] }) {
   const [mediaList, setMediaList] = useState<MediaItem[]>(initialMedia);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +50,7 @@ export default function ArtistMediaManager({ artistId, initialMedia }: { artistI
     }
 
     try {
-      const res = await fetch(`/api/admin/artists/${artistId}/media`, {
+      const res = await fetch(`/api/admin/investments/${investmentId}/media`, {
         method: "POST",
         body: formData,
       });
@@ -74,7 +74,7 @@ export default function ArtistMediaManager({ artistId, initialMedia }: { artistI
     if (!confirm("Are you sure you want to permanently delete this media item?")) return;
 
     try {
-      const res = await fetch(`/api/admin/artists/${artistId}/media?mediaId=${mediaId}`, {
+      const res = await fetch(`/api/admin/investments/${investmentId}/media?mediaId=${mediaId}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete media item");
@@ -181,7 +181,7 @@ export default function ArtistMediaManager({ artistId, initialMedia }: { artistI
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-4">Associated Media Assets ({mediaList.length})</h3>
         {mediaList.length === 0 ? (
-          <p className="text-sm text-gray-500 py-6 text-center">No media assets associated with this artist yet.</p>
+          <p className="text-sm text-gray-500 py-6 text-center">No media assets associated with this investment yet.</p>
         ) : (
           <div className="divide-y divide-gray-800">
             {mediaList.map((item) => (

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Dayton Rich Platform',
-  description: 'Institutional Artist Directory and Management Platform',
+  title: 'ndegwa investments  Platform',
+  description: 'Institutional investment Directory and Management Platform',
 };
 
 export default function RootLayout({

@@ -52,7 +52,7 @@ function AdminLoginForm() {
             Administrator sign in
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Dayton Rich platform
+            ndegwa investments  platform
           </p>
         </div>
 

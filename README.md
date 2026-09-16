@@ -1,4 +1,4 @@
-# Dayton Rich Platform
+# ndegwa investments  Platform
 
 ## Deploying to Vercel
 
@@ -17,5 +17,5 @@ npm run build
 npm run start
 ```
 
-The public API exposes only `PUBLISHED`, non-deleted artists. Drafts remain unavailable to public visitors.
+The public API exposes only `PUBLISHED`, non-deleted investments. Drafts remain unavailable to public visitors.
 # artisan

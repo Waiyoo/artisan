@@ -1,4 +1,4 @@
-//src/app/api/artists/route.ts
+//src/app/api/investments/route.ts
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
@@ -60,8 +60,8 @@ export async function GET(request: Request) {
       };
     }
 
-    const [artists, total] = await Promise.all([
-      prisma.artist.findMany({
+    const [investments, total] = await Promise.all([
+      prisma.investment.findMany({
         where,
         include: {
           categories: { include: { category: true } },
@@ -72,11 +72,11 @@ export async function GET(request: Request) {
         take: limit,
         skip,
       }),
-      prisma.artist.count({ where }),
+      prisma.investment.count({ where }),
     ]);
 
     return NextResponse.json({
-      artists,
+      investments,
       pagination: {
         total,
         page,
@@ -85,7 +85,7 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error('Fetch artists error:', error);
-    return NextResponse.json({ error: 'Failed to fetch artists' }, { status: 500 });
+    console.error('Fetch investments error:', error);
+    return NextResponse.json({ error: 'Failed to fetch investments' }, { status: 500 });
   }
 }

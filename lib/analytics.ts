@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { headers } from "next/headers";
 import crypto from "crypto";
 
-export async function trackArtistEvent(artistId: string, eventType: "VIEW" | "CONTACT_CLICK" | "MEDIA_INTERACTION", weight = 1.0) {
+export async function trackinvestmentEvent(investmentId: string, eventType: "VIEW" | "CONTACT_CLICK" | "MEDIA_INTERACTION", weight = 1.0) {
   try {
     const headerList = headers();
     const ip = headerList.get("x-forwarded-for") || "unknown";
@@ -12,12 +12,12 @@ export async function trackArtistEvent(artistId: string, eventType: "VIEW" | "CO
     // Hash IP address for privacy compliance (prevent raw storage while mitigating refresh spam)
     const ipHash = crypto.createHmac("sha256", process.env.IP_HASH_SECRET || "dayton-rich-salt").update(ip).digest("hex");
 
-    // For views, check if same IP viewed this artist within the last 30 minutes to prevent spam inflation
+    // For views, check if same IP viewed this investment within the last 30 minutes to prevent spam inflation
     if (eventType === "VIEW") {
       const thirtyMinsAgo = new Date(Date.now() - 30 * 60 * 1000);
-      const recentView = await db.artistMetric.findFirst({
+      const recentView = await db.investmentMetric.findFirst({
         where: {
-          artistId,
+          investmentId,
           eventType: "VIEW",
           ipHash,
           timestamp: { gte: thirtyMinsAgo },
@@ -29,9 +29,9 @@ export async function trackArtistEvent(artistId: string, eventType: "VIEW" | "CO
 
     // Record metric asynchronously without blocking caller
     await db.$transaction([
-      db.artistMetric.create({
+      db.investmentMetric.create({
         data: {
-          artistId,
+          investmentId,
           eventType,
           weight,
           ipHash,
@@ -40,8 +40,8 @@ export async function trackArtistEvent(artistId: string, eventType: "VIEW" | "CO
       }),
       ...(eventType === "VIEW"
         ? [
-            db.artist.update({
-              where: { id: artistId },
+            db.investment.update({
+              where: { id: investmentId },
               data: { profileViews: { increment: 1 } },
             }),
           ]

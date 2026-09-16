@@ -8,8 +8,8 @@ function slugify(value: string) {
 
 export async function GET() {
   if (!await requireAdmin()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const artists = await db.artist.findMany({ where: { isDeleted: false }, orderBy: { updatedAt: 'desc' }, include: { media: { take: 1, orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }] } } });
-  return NextResponse.json({ artists });
+  const investments = await db.investment.findMany({ where: { isDeleted: false }, orderBy: { updatedAt: 'desc' }, include: { media: { take: 1, orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }] } } });
+  return NextResponse.json({ investments });
 }
 
 export async function POST(request: Request) {
@@ -19,9 +19,9 @@ export async function POST(request: Request) {
   const slug = slugify(typeof body.slug === 'string' && body.slug ? body.slug : name);
   if (!name || !slug) return NextResponse.json({ error: 'A name and valid slug are required.' }, { status: 400 });
   try {
-    const artist = await db.artist.create({ data: { name, slug, status: body.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT', bio: typeof body.bio === 'string' ? body.bio.trim() || null : null, location: typeof body.location === 'string' ? body.location.trim() || null : null } });
-    return NextResponse.json({ artist }, { status: 201 });
+    const investment = await db.investment.create({ data: { name, slug, status: body.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT', bio: typeof body.bio === 'string' ? body.bio.trim() || null : null, location: typeof body.location === 'string' ? body.location.trim() || null : null } });
+    return NextResponse.json({ investment }, { status: 201 });
   } catch {
-    return NextResponse.json({ error: 'That artist slug is already in use.' }, { status: 409 });
+    return NextResponse.json({ error: 'That investment slug is already in use.' }, { status: 409 });
   }
 }

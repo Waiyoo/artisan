@@ -11,11 +11,11 @@ export default async function AdminDashboardPage() {
   const session = token ? await verifySessionToken(token) : null;
   if (!session) redirect('/admin/login');
 
-  const [admin, artists, published, drafts] = await Promise.all([
+  const [admin, investments, published, drafts] = await Promise.all([
     db.adminUser.findUnique({ where: { id: session.userId }, select: { email: true } }),
-    db.artist.count({ where: { isDeleted: false } }),
-    db.artist.count({ where: { isDeleted: false, status: 'PUBLISHED' } }),
-    db.artist.count({ where: { isDeleted: false, status: 'DRAFT' } }),
+    db.investment.count({ where: { isDeleted: false } }),
+    db.investment.count({ where: { isDeleted: false, status: 'PUBLISHED' } }),
+    db.investment.count({ where: { isDeleted: false, status: 'DRAFT' } }),
   ]);
 
   return (
@@ -24,11 +24,11 @@ export default async function AdminDashboardPage() {
         <p className="text-sm font-medium text-emerald-700">Signed in as {admin?.email}</p>
         <h1 className="mt-2 text-3xl font-bold">Platform overview</h1>
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          {[["Artists", artists], ["Published", published], ["Drafts", drafts]].map(([label, value]) => (
+          {[["investments", investments], ["Published", published], ["Drafts", drafts]].map(([label, value]) => (
             <div key={String(label)} className="rounded-xl bg-white p-6 shadow-sm"><p className="text-sm text-slate-500">{label}</p><p className="mt-2 text-3xl font-bold">{value}</p></div>
           ))}
         </div>
-        <div className="mt-8 flex gap-5"><Link href="/admin/artists" className="text-sm font-semibold text-emerald-700 hover:underline">Manage artists →</Link><Link href="/" className="text-sm font-semibold text-emerald-700 hover:underline">View public site →</Link></div>
+        <div className="mt-8 flex gap-5"><Link href="/admin/investments" className="text-sm font-semibold text-emerald-700 hover:underline">Manage investments →</Link><Link href="/" className="text-sm font-semibold text-emerald-700 hover:underline">View public site →</Link></div>
       </div>
     </main>
   );

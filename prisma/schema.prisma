@@ -56,7 +56,7 @@ model Session {
   @@index([userId])
 }
 
-model Artist {
+model investment {
   id             String             @id @default(cuid())
   name           String
   fullName       String?
@@ -76,13 +76,13 @@ model Artist {
   customWebsite  String?
 
   // Relations
-  categories     ArtistCategory[]
-  tags           ArtistTag[]
-  media          ArtistMedia[]
+  categories     investmentCategory[]
+  tags           investmentTag[]
+  media          investmentMedia[]
   externalLinks  ExternalLink[]
-  socialLinks    ArtistSocialLink[]
+  socialLinks    investmentsocialLink[]
   bookingContact BookingContact?
-  metrics        ArtistMetric[]
+  metrics        investmentMetric[]
 
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
@@ -102,7 +102,7 @@ model Category {
   name        String           @unique
   slug        String           @unique
   description String?
-  artists     ArtistCategory[]
+  investments     investmentCategory[]
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
@@ -113,34 +113,34 @@ model Tag {
   id        String      @id @default(cuid())
   name      String      @unique
   slug      String      @unique
-  artists   ArtistTag[]
+  investments   investmentTag[]
   createdAt DateTime    @default(now())
 
   @@index([slug])
 }
 
-model ArtistCategory {
-  artistId   String
+model investmentCategory {
+  investmentId   String
   categoryId String
-  artist     Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  investment     investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  @@id([artistId, categoryId])
+  @@id([investmentId, categoryId])
 }
 
-model ArtistTag {
-  artistId String
+model investmentTag {
+  investmentId String
   tagId    String
-  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  investment   investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   tag      Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
-  @@id([artistId, tagId])
+  @@id([investmentId, tagId])
 }
 
-model ArtistMedia {
+model investmentMedia {
   id           String    @id @default(cuid())
-  artistId     String
-  artist       Artist    @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  investmentId     String
+  investment       investment    @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   type         MediaType
   url          String    @db.Text
   thumbnailUrl String?   @db.Text
@@ -154,37 +154,37 @@ model ArtistMedia {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  @@index([artistId])
+  @@index([investmentId])
   @@index([type])
 }
 
 model ExternalLink {
   id        String   @id @default(cuid())
-  artistId  String
-  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  investmentId  String
+  investment    investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   title     String
   url       String
   category  String?  @default("General")
   createdAt DateTime @default(now())
 
-  @@index([artistId])
+  @@index([investmentId])
 }
 
-model ArtistSocialLink {
+model investmentsocialLink {
   id        String   @id @default(cuid())
-  artistId  String
-  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  investmentId  String
+  investment    investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   platform  String   // e.g., "instagram", "spotify", "youtube", "tiktok", "twitter"
   url       String
   createdAt DateTime @default(now())
 
-  @@index([artistId])
+  @@index([investmentId])
 }
 
 model BookingContact {
   id            String   @id @default(cuid())
-  artistId      String   @unique
-  artist        Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  investmentId      String   @unique
+  investment        investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   useDefault    Boolean  @default(true)
   customEmail   String?
   customPhone   String?  // WhatsApp formatted phone
@@ -195,10 +195,10 @@ model BookingContact {
 
 model HomepageContent {
   id              String   @id @default(cuid())
-  heroTitle       String   @default("Discover World-Class Public Artists")
-  heroSubtitle    String   @default("The definitive showcase for visionary public entertainment and art talent.")
+  heroTitle       String   @default("Discover World-Class Public investments")
+  heroSubtitle    String   @default("The definitive showcase for visionary public entertainment and art wealth.")
   heroBannerUrl   String?
-  featuredHeading String   @default("Featured Artists")
+  featuredHeading String   @default("Featured investments")
   trendingHeading String   @default("Trending Now")
   updatedAt       DateTime @updatedAt
 }
@@ -223,15 +223,15 @@ model Banner {
 
 model SiteSettings {
   id                    String   @id @default("default-site-settings")
-  heroTitle             String   @default("Discover Exceptional Independent Talent")
-  heroDescription       String   @default("Explore verified artists, creatives, and performers across global stages.")
+  heroTitle             String   @default("Discover Exceptional Independent wealth")
+  heroDescription       String   @default("Explore verified investments.")
   heroImage             String?
-  ctaText               String   @default("Explore Artists")
-  ctaDestination        String   @default("/artists")
+  ctaText               String   @default("Explore investments")
+  ctaDestination        String   @default("/investments")
   introHeading          String   @default("Curated Excellence")
-  introBody             String   @default("Connecting promoters, venues, and fans directly with verified talent.")
+  introBody             String   @default("Connecting promoters, upcoming projects, and investors directly with verified wealth.")
   defaultWhatsapp       String?
-  defaultEmail          String   @default("contact@daytonrich.com")
+  defaultEmail          String   @default("contact@ndegwainvestments.com")
   defaultWebsite        String?
   socialInstagram       String?
   socialTwitter         String?
@@ -248,17 +248,17 @@ model SystemSetting {
   updatedAt DateTime @updatedAt
 }
 
-model ArtistMetric {
+model investmentMetric {
   id        String     @id @default(cuid())
-  artistId  String
-  artist    Artist     @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  investmentId  String
+  investment    investment     @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   eventType MetricType
   weight    Float      @default(1.0)
   ipHash    String?    // Anonymized/hashed IP to prevent rapid refresh abuse
   userAgent String?
   timestamp DateTime   @default(now())
 
-  @@index([artistId, timestamp])
+  @@index([investmentId, timestamp])
   @@index([eventType, timestamp])
 }
 
@@ -273,8 +273,8 @@ model LoginAttempt {
 
 model AnalyticsEvent {
   id        String   @id @default(cuid())
-  eventType String   // e.g., "PAGE_VIEW", "ARTIST_VIEW", "SEARCH", "CONTACT_CLICK"
-  entityId  String?  // artistId or categoryId
+  eventType String   // e.g., "PAGE_VIEW", "investment_VIEW", "SEARCH", "CONTACT_CLICK"
+  entityId  String?  // investmentId or categoryId
   metadata  String?  @db.Text // JSON string
   ipAddress String?
   userAgent String?
