@@ -28,7 +28,7 @@ export default async function AdminDashboardPage() {
             <div key={String(label)} className="rounded-xl bg-white p-6 shadow-sm"><p className="text-sm text-slate-500">{label}</p><p className="mt-2 text-3xl font-bold">{value}</p></div>
           ))}
         </div>
-        <div className="mt-8 flex gap-5"><Link href="/admin/investments" className="text-sm font-semibold text-emerald-700 hover:underline">Manage investments →</Link><Link href="/" className="text-sm font-semibold text-emerald-700 hover:underline">View public site →</Link></div>
+        <div className="mt-8 flex gap-5"><Link href="/admin/investment" className="text-sm font-semibold text-emerald-700 hover:underline">Manage investments →</Link><Link href="/" className="text-sm font-semibold text-emerald-700 hover:underline">View public site →</Link></div>
       </div>
     </main>
   );
