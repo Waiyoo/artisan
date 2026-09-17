@@ -4,7 +4,6 @@ import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin';
 import InvestmentEditor from '@/components/admin/investmentEditor';
 import InvestmentMediaManager from '@/components/admin/investmentMediaManager';
-
 export const dynamic = 'force-dynamic';
 
 export default async function AdmininvestmentPage({
@@ -35,7 +34,7 @@ export default async function AdmininvestmentPage({
     <main className="min-h-screen bg-slate-50 p-6 sm:p-10">
       <div className="mx-auto max-w-5xl">
         <Link
-          href="/admin/investments"
+          href="/admin/investment"
           className="text-sm font-semibold text-emerald-700 hover:underline"
         >
           ← investment management
